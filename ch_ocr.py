@@ -3,10 +3,12 @@ import os
 import pinyin
 import keyboard
 import pyperclip
+import threading
 
 from PIL import ImageGrab, Image
 
 def ocr():
+    pyperclip.copy('')
     m = 0
     while m == 0:
         try:
@@ -20,13 +22,23 @@ def ocr():
             print(pinyin.get(text), end='')
             print(text, end='')
             print("===================================================")
-            pyperclip.copy('')
             m = 1
-        except KeyboardInterrupt:
-            exit()
-        except Exception as e:
+            pyperclip.copy('')
+        except AttributeError:
             pass
 
-print("[+] Go ahead, I'm listening...")
-keyboard.add_hotkey("win+shift+s", ocr)
-keyboard.wait()
+def listener():
+    print("[+] Go ahead, I'm listening...")
+    keyboard.add_hotkey('win+shift+s', ocr)
+
+    try:
+        keyboard.wait('ctrl+c')
+    except KeyboardInterrupt:
+        pass
+    finally:
+        keyboard.remove_all_hotkeys()
+        print("[+] Stopping listener.")
+
+if __name__ == "__main__":
+    k_thread = threading.Thread(target=listener)
+    k_thread.start()
