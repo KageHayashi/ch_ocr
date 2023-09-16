@@ -1,0 +1,6 @@
+keyboard==0.13.5
+packaging==23.1
+Pillow==10.0.1
+pinyin==0.4.0
+pyperclip==1.8.2
+pytesseract==0.3.10
